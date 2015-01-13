@@ -108,11 +108,7 @@ module.exports = function (stem) {
 
     stem.log.info('Item added, readying up');
 
-    stem.botTrade.ready(function () {
-
-      stem.log.info('Ready');
-
-    });
+    stem.botTrade.ready();
 
   });
 
@@ -137,13 +133,13 @@ module.exports = function (stem) {
 
   stem.api.addHandler('botTrade', 'ready', function () {
 
-    stem.botTrade.ready(function () {
+    stem.log.info('Other bot is now ready, confirming trade');
 
-      stem.log.info('Ready');
+    stem.botTrade.ready(function () {
 
       stem.botTrade.confirm(function () {
 
-        stem.log.info('Confirmed trade');
+        stem.log.info('Trade confirmed');
 
       });
 
