@@ -1,157 +1,53 @@
 
-var isCommunityReady = false,
-    isGiver          = false,
-    isTrading        = false,
-    lastTraded       = '',
-    tradesCompleted  = 0,
-    tradesPerMin     = 0,
-    prevTradesPerMin = 0;
-
-setInterval(function () {
-
-  prevTradesPerMin = tradesPerMin;
-  tradesPerMin = 0;
-
-}, 60000);
-
 module.exports = function (stem) {
 
-  stem.api.addHandler('stem', 'communityReady', function () {
+  /**
+   * Set default states
+   */
 
-    isCommunityReady = true;
-    isGiver = (stem.config.initBot === stem.bot.steamID);
+  stem.states.isCommunityReady = false;
+  stem.states.isTrading = false;
+  stem.states.isGiver = false;
+  stem.states.lastTraded = '';
 
-    // Wait for the `initBot` to send the trade first
-    if (stem.config.initBot !== stem.bot.steamID)
-      return;
+  stem.states.prevTradesPerMin = 0;
+  stem.states.tradesCompleted = 0;
+  stem.states.tradesPerMin = 0;
 
-    stem.log.info('Sending trade to', stem.config.initTradeBot);
+  stem.tpmInterval = setInterval(function () {
 
-    stem.bot.trade(stem.config.initTradeBot);
+    stem.states.prevTradesPerMin = stem.states.tradesPerMin;
+    stem.states.tradesPerMin = 0;
 
-  });
+  }, 60000);
 
-  stem.api.addHandler('bot', 'tradeResult', function (tradeID, tradeResponse, steamID) {
+  /**
+   * Register handlers
+   */
 
-    // Trade request was accepted
-    if (!tradeResponse)
-      return;
+  stem.api.addHandler('stem', 'communityReady', require('./handlers/communityReady'));
 
-    // Trade request wasn't accepted, retry in a few seconds
-    setTimeout(function () {
+  stem.api.addHandler('botTrade', 'offerChanged', require('./handlers/offerChanged'));
 
-      stem.bot.trade(steamID);
+  stem.api.addHandler('bot', 'tradeProposed', require('./handlers/tradeProposed'));
 
-    }, 3000);
+  stem.api.addHandler('bot', 'sessionStart', require('./handlers/sessionStart'));
 
-  });
+  stem.api.addHandler('bot', 'tradeResult', require('./handlers/tradeResult'));
 
-  stem.api.addHandler('bot', 'tradeProposed', function (tradeID, steamID) {
+  stem.api.addHandler('botTrade', 'ready', require('./handlers/ready'));
 
-    // Deny trade if not yet logged into Steam community
-    if (!isCommunityReady)
-      return stem.bot.respondToTrade(tradeID, false);
+  stem.api.addHandler('botTrade', 'end', require('./handlers/end'));
 
-    else if (isTrading)
-      return stem.bot.respondToTrade(tradeID, false);
-
-    stem.log.info('New trade proposed from', steamID);
-
-    // Accept trade
-    stem.bot.respondToTrade(tradeID, true);
-
-  });
-
-  stem.api.addHandler('bot', 'sessionStart', function (steamID) {
-
-    lastTraded = steamID;
-    isTrading = true;
-
-    stem.log.info('Trade session started');
-
-    // Open trade session
-    stem.botTrade.open(steamID);
-
-    if (!isGiver)
-      return;
-
-    // Load TF2 inventory
-    stem.botTrade.loadInventory(440, 2, function (inventory) {
-
-      // Inventory failed to load
-      if (!inventory)
-        return stem.botTrade.cancel();
-
-      inventory = inventory.filter(function (item) {
-
-        return item.tradable;
-
-      });
-
-      stem.botTrade.addItem(inventory[0], function () {
-
-        stem.log.info('Added item', inventory[0].market_hash_name);
-
-        setTimeout(function () {
-
-          stem.botTrade.ready();
-
-        }, 3000);
-
-      });
-
-    });
-
-  });
-
-  stem.api.addHandler('botTrade', 'offerChanged', function () {
-
-    stem.log.info('Item added, readying up');
-
-    stem.botTrade.ready();
-
-  });
-
-  stem.api.addHandler('botTrade', 'end', function () {
-
-    stem.log.info('Trade ended');
-
-    tradesCompleted++;
-    tradesPerMin++;
-
-    isTrading = false;
-
-    isGiver = !isGiver;
-
-    if (!isGiver)
-      return;
-
-    stem.log.info('Trading', lastTraded);
-    stem.bot.trade(lastTraded);
-
-  });
-
-  stem.api.addHandler('botTrade', 'ready', function () {
-
-    stem.log.info('Other bot is now ready, confirming trade');
-
-    stem.botTrade.ready(function () {
-
-      stem.botTrade.confirm(function () {
-
-        stem.log.info('Trade confirmed');
-
-      });
-
-    });
-
-  });
+  /**
+   * Register commands
+   */
 
   stem.api.addCommand(/.status/, function (steamID) {
 
     stem.bot.sendMessage(steamID, 'Status:' +
-                                  '\nTrades completed: ' + tradesCompleted +
-                                  '\nTrades per minute: ' + prevTradesPerMin);
+                                  '\nTrades completed: ' + stem.states.tradesCompleted +
+                                  '\nTrades per minute: ' + stem.statesprevTradesPerMin);
 
   });
 
