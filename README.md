@@ -46,10 +46,7 @@ Use this script to create a sentry file that is compatible with stem from the se
 ```json
 {
 
-  "botname": "",
-  "username": "",
-  "password": "",
-  "admins": ["1223", "23343"],
+  "admins": ["steamID64", "steamID64"],
   "plugins": ["auto-trader"],
 
   "initBot": "76561198089129440",
@@ -58,6 +55,7 @@ Use this script to create a sentry file that is compatible with stem from the se
 }
 ```
 **Config values**
+
 The following properties need to be filled out:
   - `admins` - An array of strings containing the steamID's of admins
   - `initBot` - The steamID of the first bot that will be trading
