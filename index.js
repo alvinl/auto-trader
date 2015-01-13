@@ -2,7 +2,17 @@
 var isCommunityReady = false,
     isGiver          = false,
     isTrading        = false,
-    lastTraded       = '';
+    lastTraded       = '',
+    tradesCompleted  = 0,
+    tradesPerMin     = 0,
+    prevTradesPerMin = 0;
+
+setInterval(function () {
+
+  prevTradesPerMin = tradesPerMin;
+  tradesPerMin = 0;
+
+}, 60000);
 
 module.exports = function (stem) {
 
@@ -110,6 +120,9 @@ module.exports = function (stem) {
 
     stem.log.info('Trade ended');
 
+    tradesCompleted++;
+    tradesPerMin++;
+
     isTrading = false;
 
     isGiver = !isGiver;
@@ -135,6 +148,14 @@ module.exports = function (stem) {
       });
 
     });
+
+  });
+
+  stem.api.addCommand(/.status/, function (steamID) {
+
+    stem.bot.sendMessage(steamID, 'Status:' +
+                                  '\nTrades completed: ' + tradesCompleted +
+                                  '\nTrades per minute: ' + prevTradesPerMin);
 
   });
 
