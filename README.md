@@ -33,7 +33,7 @@ Updates can be installed by going into the `stem` folder and running the followi
   "username": "",
   "password": "",
   "admins": ["1223", "23343"],
-  "plugins": ["auto-trade"],
+  "plugins": ["auto-trader"],
 
   "initBot": "76561198089129440",
   "initTradeBot": "76561198089063899"
