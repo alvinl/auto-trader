@@ -20,6 +20,11 @@ A [Stem](https://github.com/alvinl/stem) plugin that allows 2 accounts to trade 
 
 Remember to check the [notes](#notes) section and available [commands](#commands)
 
+## Updating
+Updates can be installed by going into the `stem` folder and running the following command:
+
+`$ npm install git://github.com/alvinl/auto-trader.git`.
+
 ### Config
 ```json
 {
