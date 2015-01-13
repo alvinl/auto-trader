@@ -57,7 +57,7 @@ module.exports = function (stem) {
 
     stem.bot.sendMessage(steamID, 'Status:' +
                                   '\nTrades completed: ' + stem.states.tradesCompleted +
-                                  '\nTrades per minute: ' + stem.statesprevTradesPerMin);
+                                  '\nTrades per minute: ' + stem.states.prevTradesPerMin);
 
   });
 
