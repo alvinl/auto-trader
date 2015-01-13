@@ -2,6 +2,16 @@
 module.exports = function (stem) {
 
   /**
+   * Validate config
+   */
+
+  if (!stem.config.hasOwnProperty('initBot'))
+    throw new Error('Missing initBot property in config.');
+
+  else if (!stem.config.hasOwnProperty('initTradeBot'))
+    throw new Error('Missing initTradeBot property in config.');
+
+  /**
    * Set default states
    */
 
