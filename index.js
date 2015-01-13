@@ -20,6 +20,7 @@ module.exports = function (stem) {
   stem.states.isGiver = false;
   stem.states.lastTraded = '';
 
+  stem.states.startupTime = Date.now();
   stem.states.prevTradesPerMin = 0;
   stem.states.tradesCompleted = 0;
   stem.states.tradesPerMin = 0;
@@ -55,9 +56,14 @@ module.exports = function (stem) {
 
   stem.api.addCommand(/.status/, function (steamID) {
 
+    var timeNow = Date.now();
+
     stem.bot.sendMessage(steamID, 'Status:' +
                                   '\nTrades completed: ' + stem.states.tradesCompleted +
-                                  '\nTrades per minute: ' + stem.states.prevTradesPerMin);
+                                  '\nTrades per minute: ' + stem.states.prevTradesPerMin +
+                                  '\nUptime: %hours hours (%minutes minutes)'
+                                    .replace('%hours', ((timeNow - stem.states.startupTime) / 3600000) | 0)
+                                    .replace('%minutes', ((timeNow - stem.states.startupTime) / 60000) | 0));
 
   });
 
