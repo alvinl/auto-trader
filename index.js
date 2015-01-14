@@ -75,6 +75,6 @@ module.exports = function (stem) {
                                     .replace('%hours', ((timeNow - stem.states.startupTime) / 3600000) | 0)
                                     .replace('%minutes', ((timeNow - stem.states.startupTime) / 60000) | 0));
 
-  });
+  }, { permission: 'admin' });
 
 };
