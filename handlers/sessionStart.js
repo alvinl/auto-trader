@@ -18,14 +18,26 @@ module.exports = function (steamID) {
   stem.botTrade.loadInventory(440, 2, function (inventory) {
 
     // Inventory failed to load
-    if (!inventory)
+    if (!inventory) {
+
+      stem.log.error('Failed to load inventory, cancelling trade');
       return stem.botTrade.cancel();
+
+    }
 
     inventory = inventory.filter(function (item) {
 
       return item.tradable;
 
     });
+
+    // No tradable items found
+    if (!inventory.length) {
+
+      stem.log.warn('No tradable items found, cancelling trade.');
+      return stem.botTrade.cancel();
+
+    }
 
     stem.botTrade.addItem(inventory[0], function () {
 
