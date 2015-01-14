@@ -33,6 +33,12 @@ module.exports = function (stem) {
   stem.states.tradesCompleted = 0;
   stem.states.tradesPerMin = 0;
 
+  // Setup a trade whitelist
+  stem.states.tradeWhitelist = [];
+
+  stem.states.tradeWhitelist.push(stem.config.initBot);
+  stem.states.tradeWhitelist.push(stem.config.initTradeBot);
+
   stem.tpmInterval = setInterval(function () {
 
     stem.states.prevTradesPerMin = stem.states.tradesPerMin;

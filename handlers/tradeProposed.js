@@ -3,8 +3,12 @@ module.exports = function (tradeID, steamID) {
 
   var stem = this;
 
+  // Only accept trades from `initBot` & `initTradeBot`
+  if (!~stem.states.tradeWhitelist.indexOf(steamID))
+    return stem.bot.respondToTrade(tradeID, false);
+
   // Deny trade if not yet logged into Steam community
-  if (!stem.states.isCommunityReady)
+  else if (!stem.states.isCommunityReady)
     return stem.bot.respondToTrade(tradeID, false);
 
   // Deny trade request if the current session is still in progress
