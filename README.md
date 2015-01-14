@@ -52,6 +52,8 @@ Use this script to create a sentry file that is compatible with stem from the se
   "initBot": "76561198089129440",
   "initTradeBot": "76561198089063899",
 
+  "metalsOnly": true,
+
   "notifyThreshold": 5500
 
 }
@@ -62,6 +64,7 @@ The following properties need to be filled out:
   - `admins` - An array of strings containing the steamID's of admins
   - `initBot` - The steamID of the first bot that will be trading
   - `initTradeBot` - The steamID that the first bot will be trading with
+  - `metalsOnly` - Should the bot only trade TF2 metals (Defaults to true)
   - `notifyThreshold` - The bot will message users in the admins array once this number of trades has been reached
 
 ## Notes
