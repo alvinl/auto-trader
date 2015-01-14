@@ -1,4 +1,8 @@
 
+var validItemNames = ['Scrap Metal',
+                      'Refined Metal',
+                      'Reclaimed Metal'];
+
 module.exports = function (steamID) {
 
   var stem = this;
@@ -21,11 +25,20 @@ module.exports = function (steamID) {
     if (!inventory) {
 
       stem.log.error('Failed to load inventory, cancelling trade');
-      return stem.botTrade.cancel();
+      return stem.botTrade.cancel(function () {
+
+        stem.states.isTrading = false;
+        stem.states.isGiver = !stem.states.isGiver;
+
+      });
 
     }
 
     inventory = inventory.filter(function (item) {
+
+      // Only return metals if required
+      if (stem.config.metalsOnly)
+        return (item.tradable && ~validItemNames.indexOf(item.market_hash_name));
 
       return item.tradable;
 
@@ -35,7 +48,12 @@ module.exports = function (steamID) {
     if (!inventory.length) {
 
       stem.log.warn('No tradable items found, cancelling trade.');
-      return stem.botTrade.cancel();
+      return stem.botTrade.cancel(function () {
+
+        stem.states.isTrading = false;
+        stem.states.isGiver = !stem.states.isGiver;
+
+      });
 
     }
 

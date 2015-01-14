@@ -12,6 +12,13 @@ module.exports = function (stem) {
     throw new Error('Missing initTradeBot property in config.');
 
   /**
+   * Set default config values
+   */
+
+  if (!stem.config.hasOwnProperty('metalsOnly'))
+    stem.config.metalsOnly = true;
+
+  /**
    * Set default states
    */
 
