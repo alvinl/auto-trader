@@ -14,6 +14,21 @@ module.exports = function () {
   if (!stem.states.isGiver)
     return;
 
+  // Check if `notifyThreshold` was reached
+  if (stem.states.tradesCompleted === stem.config.notifyThreshold && !stem.states.isAdminNotified) {
+
+    stem.log.warn('Notify threshold reached, notifying admins');
+
+    stem.config.admins.forEach(function (steamID) {
+
+      stem.bot.sendMessage(steamID, 'Notify threshold reached! Trades completed: ' + stem.states.tradesCompleted);
+
+    });
+
+    stem.states.isAdminNotified = true;
+
+  }
+
   stem.log.info('Sending trade to', stem.states.lastTraded);
   stem.bot.trade(stem.states.lastTraded);
 

@@ -16,6 +16,7 @@ module.exports = function (stem) {
    */
 
   stem.states.isCommunityReady = false;
+  stem.states.isAdminNotified = false;
   stem.states.isTrading = false;
   stem.states.isGiver = false;
   stem.states.lastTraded = '';

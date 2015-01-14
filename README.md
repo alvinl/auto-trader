@@ -46,11 +46,13 @@ Use this script to create a sentry file that is compatible with stem from the se
 ```json
 {
 
-  "admins": ["steamID64", "steamID64"],
+  "admins": ["76561198042819371", "76561198042819371"],
   "plugins": ["auto-trader"],
 
   "initBot": "76561198089129440",
-  "initTradeBot": "76561198089063899"
+  "initTradeBot": "76561198089063899",
+
+  "notifyThreshold": 5500
 
 }
 ```
@@ -60,6 +62,7 @@ The following properties need to be filled out:
   - `admins` - An array of strings containing the steamID's of admins
   - `initBot` - The steamID of the first bot that will be trading
   - `initTradeBot` - The steamID that the first bot will be trading with
+  - `notifyThreshold` - The bot will message users in the admins array once this number of trades has been reached
 
 ## Notes
 1. Verify that the 2 accounts that are trading each other are friends with one another and have at least 5 TF2 items in each account.
