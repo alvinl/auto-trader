@@ -54,6 +54,8 @@ module.exports = function (stem) {
 
   stem.api.addHandler('bot', 'tradeResult', require('./handlers/tradeResult'));
 
+  stem.api.addHandler('botTrade', 'error', require('./handlers/tradeError'));
+
   stem.api.addHandler('botTrade', 'ready', require('./handlers/ready'));
 
   stem.api.addHandler('botTrade', 'end', require('./handlers/end'));
