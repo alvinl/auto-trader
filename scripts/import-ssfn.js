@@ -12,7 +12,7 @@ if (!botName || !ssfnLocation)
 
 console.log('Importing hash for %s and saving to %s', botName, cwd + '/.' + botName);
 
-fs.readFile(path.resolve(__dirname, ssfnLocation), function (err, ssfnData) {
+fs.readFile(path.resolve(cwd, ssfnLocation), function (err, ssfnData) {
 
   if (err)
     return console.error('Failed to import ssfn:', err.message);
