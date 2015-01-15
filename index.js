@@ -44,6 +44,8 @@ module.exports = function (stem) {
     stem.states.prevTradesPerMin = stem.states.tradesPerMin;
     stem.states.tradesPerMin = 0;
 
+    stem.log.info('Trades per minute:', stem.states.prevTradesPerMin);
+
   }, 60000);
 
   /**
