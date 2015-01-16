@@ -3,6 +3,11 @@ Auto-trader
 A [Stem](https://github.com/alvinl/stem) plugin that allows 2 accounts to trade one another to remove the captcha restriction.
 
 ## Installation
+
+[Installing on Windows](https://github.com/alvinl/auto-trader/wiki/Installing-on-Windows)
+
+Linux and OS X steps below:
+
 1. Install [Stem](https://github.com/alvinl/stem)
   1. `$ git clone https://github.com/alvinl/stem.git && cd stem`
   2. `$ npm install`
