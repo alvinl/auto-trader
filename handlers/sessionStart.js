@@ -40,7 +40,17 @@ module.exports = function (steamID) {
       if (stem.config.metalsOnly)
         return (item.tradable && ~validItemNames.indexOf(item.market_hash_name));
 
-      return item.tradable;
+      /**
+       * Is this a strange item
+       * @type {Boolean}
+       */
+      var isStrange = item.tags.some(function (itemTag) {
+
+        return (itemTag.internal_name === 'strange');
+
+      });
+
+      return (item.tradable && !isStrange);
 
     });
 
