@@ -11,12 +11,11 @@ module.exports = function (stem) {
   else if (!stem.config.hasOwnProperty('initTradeBot'))
     throw new Error('Missing initTradeBot property in config.');
 
-  /**
-   * Set default config values
-   */
+  else if (!stem.config.hasOwnProperty('inventories'))
+    throw new Error('Missing inventories property in config.');
 
-  if (!stem.config.hasOwnProperty('metalsOnly'))
-    stem.config.metalsOnly = true;
+  else if (!stem.config.inventories.length)
+    throw new Error('Inventories property should have at least 1 inventory specified.');
 
   /**
    * Set default states
@@ -32,6 +31,49 @@ module.exports = function (stem) {
   stem.states.prevTradesPerMin = 0;
   stem.states.tradesCompleted = 0;
   stem.states.tradesPerMin = 0;
+
+  /**
+   * Inventory codes assigned to their app and context id's
+   * @type {Object}
+   */
+  var inventoryCodes ={
+
+    'TF2':   '440:2',
+    'CS:GO': '730:2',
+    'DOTA2': '570:2'
+
+  };
+
+  stem.states.invsToLoad = [];
+
+  // Setup async tasks to load inventories
+  stem.config.inventories.forEach(function (inventoryCode) {
+
+    inventoryCode = inventoryCode.toUpperCase();
+
+    // Invalid inventory code
+    if (!inventoryCodes.hasOwnProperty(inventoryCode))
+      return stem.log.error('Invalid inventory:', inventoryCode);
+
+    stem.states.invsToLoad.push(function (cb) {
+
+      var loadInvOpts = {
+
+        appId:     inventoryCodes[inventoryCode].split(':')[0],
+        contextId: inventoryCodes[inventoryCode].split(':')[1]
+
+      };
+
+      // Load inventory
+      stem.botOffers.loadMyInventory(loadInvOpts, cb);
+
+    });
+
+  });
+
+  // No valid inventories
+  if (!stem.states.invsToLoad.length)
+    throw new Error('Inventories property should have at least 1 valid inventory specified.');
 
   // Setup a trade whitelist
   stem.states.tradeWhitelist = [];

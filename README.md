@@ -57,7 +57,9 @@ Use this script to create a sentry file that is compatible with stem from the se
   "initBot": "76561198089129440",
   "initTradeBot": "76561198089063899",
 
-  "metalsOnly": true,
+  "inventories": ["tf2"],
+
+  "cratesOnly": false,
 
   "notifyThreshold": 5500
 
@@ -69,7 +71,10 @@ The following properties need to be filled out:
   - `admins` - An array of strings containing the steamID's of admins
   - `initBot` - The steamID of the first bot that will be trading
   - `initTradeBot` - The steamID that the first bot will be trading with
-  - `metalsOnly` - Should the bot only trade TF2 metals (Defaults to true)
+  - `inventories` - An array of inventories you want to trade items from.
+    - The following games are currently supported: `tf2`, `cs:go`, `dota2`
+    - Multiple inventories example: `"inventories": ["tf2", "cs:go"]`
+  - `cratesOnly` - Setting this to `true` will only allow crates, chests, or cases to be traded.
   - `notifyThreshold` - The bot will message users in the admins array once this number of trades has been reached
 
 ## Notes

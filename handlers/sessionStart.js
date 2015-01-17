@@ -1,7 +1,21 @@
 
-var validItemNames = ['Scrap Metal',
-                      'Refined Metal',
-                      'Reclaimed Metal'];
+/**
+ * Dependencies
+ */
+
+var async = require('async'),
+    _     = require('lodash');
+
+
+/**
+ * Internal names for cases, chests and crates
+ * @type {Array}
+ */
+var INTERNAL_CRATE_NAMES = ['Supply Crate',
+                            'TF_LockedCrate',
+                            'CSGO_Type_WeaponCase',
+                            'treasure_chest',
+                            'retired_treasure_chest'];
 
 module.exports = function (steamID) {
 
@@ -18,13 +32,13 @@ module.exports = function (steamID) {
   if (!stem.states.isGiver)
     return;
 
-  // Load TF2 inventory
-  stem.botTrade.loadInventory(440, 2, function (inventory) {
+  // Load inventories
+  async.parallel(stem.states.invsToLoad, function (err, inventories) {
 
-    // Inventory failed to load
-    if (!inventory) {
+    // An inventory failed to load
+    if (err) {
 
-      stem.log.error('Failed to load inventory, cancelling trade');
+      stem.log.error('Failed to load inventory, cancelling trade. (%s)', err.message);
       return stem.botTrade.cancel(function () {
 
         stem.states.isTrading = false;
@@ -34,23 +48,40 @@ module.exports = function (steamID) {
 
     }
 
-    inventory = inventory.filter(function (item) {
+    /**
+     * Flattened inventory of valid items that we can use to trade.
+     * @type {Array}
+     */
+    var inventory = _.flatten(inventories).filter(function (item) {
 
-      // Only return metals if required
-      if (stem.config.metalsOnly)
-        return (item.tradable && ~validItemNames.indexOf(item.market_hash_name));
+      // Only return crates if required
+      if (stem.config.cratesOnly) {
+
+        /**
+         * Is this item a crate, chest, or a case.
+         * @type {Boolean}
+         */
+        var isCrate = item.tags.some(function (itemTag) {
+
+          return (~INTERNAL_CRATE_NAMES.indexOf(itemTag.internal_name));
+
+        });
+
+        return (item.tradable && isCrate);
+
+      }
 
       /**
        * Is this a strange item
        * @type {Boolean}
        */
-      var isStrange = item.tags.some(function (itemTag) {
+      var isItemStrange = item.tags.some(function (itemTag) {
 
         return (itemTag.internal_name === 'strange');
 
       });
 
-      return (item.tradable && !isStrange);
+      return (item.tradable && !isItemStrange);
 
     });
 
