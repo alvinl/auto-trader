@@ -40,7 +40,8 @@ module.exports = function (stem) {
 
     'TF2':   '440:2',
     'CS:GO': '730:2',
-    'DOTA2': '570:2'
+    'DOTA2': '570:2',
+    'STEAM': '753:6'
 
   };
 

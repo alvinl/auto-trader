@@ -72,7 +72,7 @@ The following properties need to be filled out:
   - `initBot` - The steamID of the first bot that will be trading
   - `initTradeBot` - The steamID that the first bot will be trading with
   - `inventories` - An array of inventories you want to trade items from.
-    - The following games are currently supported: `tf2`, `cs:go`, `dota2`
+    - The following games are currently supported: `tf2`, `cs:go`, `dota2`, `steam`
     - Multiple inventories example: `"inventories": ["tf2", "cs:go"]`
   - `cratesOnly` - Setting this to `true` will only allow crates, chests, or cases to be traded.
   - `notifyThreshold` - The bot will message users in the admins array once this number of trades has been reached
