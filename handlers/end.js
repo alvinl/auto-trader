@@ -5,6 +5,14 @@ module.exports = function () {
 
   stem.log.info('Trade ended');
 
+  // Ignore `end` event if trade was cancelled by the desync check
+  if (stem.states.isCancelledByDesync) {
+
+    stem.states.isCancelledByDesync = false;
+    return;
+
+  }
+
   stem.states.tradesCompleted++;
   stem.states.tradesPerMin++;
 

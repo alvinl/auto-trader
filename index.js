@@ -91,6 +91,31 @@ module.exports = function (stem) {
 
   }, 60000);
 
+  // Check for possible desyncs every 2 minutes
+  stem.desyncCheck = setInterval(function () {
+
+    // Possible desync, reset trading
+    if (!stem.states.tradesPerMin && !stem.states.prevTradesPerMin &&
+        stem.states.isCommunityReady && !stem.states.isPendingTradeResult) {
+
+      stem.log.warn('Possible desync detected, resetting states.');
+
+      // Cancel trade if currently in a trade session
+      if (stem.states.isTrading)
+        return stem.botTrade.cancel(function () {
+
+          stem.states.isCancelledByDesync = true;
+          stem.states.isTrading = false;
+          stem.emit('communityReady');
+
+        });
+
+      stem.emit('communityReady');
+
+    }
+
+  }, 120000);
+
   /**
    * Register handlers
    */
